@@ -11,5 +11,5 @@ class Role extends Model
 
     protected $table = 'roles';
     protected $primaryKey = 'id';
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'is_deleted'];
 }

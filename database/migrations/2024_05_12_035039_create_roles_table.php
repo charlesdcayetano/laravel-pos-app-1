@@ -15,12 +15,23 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
 
         // seed with an initial role
         $role = new \App\Models\Role([
             'name' => 'admin',
+        ]);
+        $role->save();
+
+        $role = new \App\Models\Role([
+            'name' => 'manager',
+        ]);
+        $role->save();
+
+        $role = new \App\Models\Role([
+            'name' => 'employee',
         ]);
         $role->save();
     }

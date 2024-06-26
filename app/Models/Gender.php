@@ -11,5 +11,5 @@ class Gender extends Model
 
     protected $table = 'genders';
     protected $primaryKey = 'id';
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'is_deleted'];
 }

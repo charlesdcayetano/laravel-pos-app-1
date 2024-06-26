@@ -15,33 +15,41 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('first_name');
+            $table->string('middle_name')->nullable();
             $table->string('last_name');
-            $table->string('email');
+            $table->string('username')->unique();
+            $table->string('email')->unique();
             $table->string('profile_photo')->nullable();
             $table->string('password');
-            $table->unsignedBigInteger('gender_id');
-            $table->unsignedBigInteger('role_id');
+            $table->boolean('is_deleted')->default(0);
+            $table->foreignId('gender_id')->constrained();
+            $table->foreignId('role_id')->constrained();
+            $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('gender_id')
-                ->references('id')
-                ->on('genders');
+            // $table->foreign('gender_id')
+            //     ->references('id')
+            //     ->on('genders');
 
-            $table->foreign('role_id')
-                ->references('id')
-                ->on('roles');
+            // $table->foreign('role_id')
+            //     ->references('id')
+            //     ->on('roles');
         });
 
-        // $user = new \App\Models\User([
-        //     'first_name' => 'John',
-        //     'last_name' => 'Doe',
-        //     'email' => 'admin@email.com',
-        //     'profile_photo' => null,
-        //     'password' => Hash::make('password'),
-        //     'gender_id' => 1,
-        //     'role_id' => 1,
-        // ]);
-        // $user->save();
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
     }
 
     /**
@@ -50,5 +58,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('sessions');
     }
 };
